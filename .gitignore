@@ -1,0 +1,11 @@
+node_modules/
+*.zip
+*.log
+recordings/
+Download_Recordings/
+Download_Recordings_old/
+.env
+.DS_Store
+dist/
+build/
+.vscode/

@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "AutoCall Blast Tool",
+  "version": "1.0.0",
+  "description": "Validation and Blast Call Tool for SIP Server",
+  "permissions": [
+    "storage"
+  ],
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "AutoCall Tool"
+  },
+  "icons": {
+    "16": "icon.svg",
+    "48": "icon.svg",
+    "128": "icon.svg"
+  }
+}
