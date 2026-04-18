@@ -6,6 +6,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const path = require('path');
 const SipAgent = require('./sip-agent');
 
 // ─── Routes ──────────────────────────────────────────────────────────────────
@@ -56,6 +57,17 @@ app.use('/api/extensions', ssoAuth.protect, extensionsRoutes);
 app.use('/api/dashboard', ssoAuth.protect, dashboardRoutes);
 app.use('/api/blast-call', ssoAuth.protect, blastRoutes);
 app.use('/api/recordings', ssoAuth.protect, recordingsRoutes);
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Serve Dashboard (Frontend)
+// ─────────────────────────────────────────────────────────────────────────────
+const clientPath = path.join(__dirname, '../client/dist');
+app.use(express.static(clientPath));
+
+// Wildcard route untuk SPA (Single Page Application)
+app.get(/^(?!\/api).+/, (req, res) => {
+    res.sendFile(path.join(clientPath, 'index.html'));
+});
 
 // ─────────────────────────────────────────────────────────────────────────────
 // HTTP Server & Socket.IO

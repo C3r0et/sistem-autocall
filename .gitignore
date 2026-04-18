@@ -6,6 +6,6 @@ Download_Recordings/
 Download_Recordings_old/
 .env
 .DS_Store
-dist/
+# dist/
 build/
 .vscode/
