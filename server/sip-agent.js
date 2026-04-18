@@ -29,6 +29,7 @@ class SipAgent {
         this.isBusy = false; // New busy state for worker pool
         this.callStatus = 'IDLE'; // IDLE, DIALING, RINGING, ANSWERED, FAILED
         this.handledCalls = 0;
+        this.localIp = this.getIp(); // Cache the IP on initialization
     }
 
     start() {
@@ -57,9 +58,9 @@ class SipAgent {
                 
                 const msgStr = msg.toString();
                 
-                // Debug: Log all incoming messages
-                console.log(`\n>>> Extension ${this.extension}: Received from ${rinfo.address}:${rinfo.port}`);
-                console.log(msgStr.substring(0, 150) + '...');
+                // Reduced logging in production
+                // console.log(`\n>>> Extension ${this.extension}: Received from ${rinfo.address}:${rinfo.port}`);
+                // console.log(msgStr.substring(0, 150) + '...');
                 
                 // Manual parsing for all responses to avoid library bugs
                 // Manual parsing removed - using sip.parse for everything
@@ -129,6 +130,8 @@ class SipAgent {
     }
 
     getIp() {
+        if (this.localIp) return this.localIp; // Always return cached IP if available
+        
         if (process.env.LOCAL_IP) {
             console.log(`Using LOCAL_IP from env: ${process.env.LOCAL_IP}`);
             return process.env.LOCAL_IP;
@@ -591,7 +594,7 @@ class SipAgent {
         
         // DEBUG: Log every non-register message
         if (msg.headers.cseq.method !== 'REGISTER') {
-             console.log(`[SIP-DEBUG] Ext ${this.extension} Rx: ${msg.status || msg.method} ${msg.headers.cseq.method} (CallID: ${callId.substring(0,8)}...)`);
+        // console.log(`[SIP-DEBUG] Ext ${this.extension} Rx: ${msg.status || msg.method} ${msg.headers.cseq.method} (CallID: ${callId.substring(0,8)}...)`);
              if (!context) console.log(`[SIP-DEBUG] -> No active context found for this CallID!`);
         }
 
