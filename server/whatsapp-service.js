@@ -1,4 +1,12 @@
-const { Client, LocalAuth } = require('whatsapp-web.js');
+let Client, LocalAuth;
+try {
+    const wa = require('whatsapp-web.js');
+    Client = wa.Client;
+    LocalAuth = wa.LocalAuth;
+} catch (e) {
+    console.warn("⚠️ [WhatsApp] Module 'whatsapp-web.js' not found. WhatsApp features will be disabled.");
+}
+
 const db = require('./database');
 
 class WhatsAppService {
@@ -31,6 +39,11 @@ class WhatsAppService {
 
         console.log(`Initializing WA Session: ${sessionId}`);
         
+        if (!Client) {
+            console.error(`✗ [${sessionId}] Cannot create session: whatsapp-web.js not installed.`);
+            return;
+        }
+
         const client = new Client({
             authStrategy: new LocalAuth({ clientId: sessionId }),
             puppeteer: {
